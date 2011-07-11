@@ -35,7 +35,7 @@ class CreditCardForm(forms.Form):
                 del self.cleaned_data[e.param]
 
     def _post_clean(self):
-        super(BasicCreditCardForm, self)._post_clean()
+        super(CreditCardForm, self)._post_clean()
         if self._errors:
             return
         self.create_stripe_customer()
@@ -45,7 +45,7 @@ class PlanSubscriptionForm(CreditCardForm):
     code = forms.CharField(required=False, label=_('Coupon'))
 
     def get_stripe_data(self):
-        data = super(CreditCardForm, self).get_stripe_data()
+        data = super(PlanSubscriptionForm, self).get_stripe_data()
         data['plan'] = self.cleaned_data['plan']
         code = self.cleaned_data['code']
         if code:
