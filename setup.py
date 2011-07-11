@@ -16,6 +16,6 @@ setup(name = 'django-stripe',
         classifiers = [
               'Programming Language :: Python :: 2',
            ],
-        packages = ['./django_stripe'],
+        packages = ['django-stripe'],
         package_dir = {'./django_stripe': 'django_stripe'},
         )
