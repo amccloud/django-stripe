@@ -7,7 +7,7 @@ CURRENT_YEAR = datetime.date.today().year
 MONTH_CHOICES = [(i, '%02d' % i) for i in range(01, 13)]
 YEAR_CHOICES = [(i, i) for i in range(CURRENT_YEAR, CURRENT_YEAR + 10)]
 
-class BasicCreditCardForm(forms.Form):
+class CreditCardForm(forms.Form):
     number = forms.CharField(label=_('Card number'))
     exp_month = forms.CharField(widget=forms.Select(choices=MONTH_CHOICES), label=_('Expiration month'))
     exp_year = forms.CharField(widget=forms.Select(choices=YEAR_CHOICES), label=_('Expiration year'))
@@ -40,7 +40,7 @@ class BasicCreditCardForm(forms.Form):
             return
         self.create_stripe_customer()
 
-class CreditCardForm(BasicCreditCardForm):
+class PlanSubscriptionForm(CreditCardForm):
     plan = forms.CharField(widget=forms.Select(choices=STRIPE_PLAN_CHOICES))
     code = forms.CharField(required=False, label=_('Coupon'))
 
