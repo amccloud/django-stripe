@@ -10,7 +10,10 @@ class StripeSubscriptionBackend(SimpleBackend):
         })
 
     def register(self, request, plan, **kwargs):
-        group = Group.objects.get(pk=plan)
         new_user = super(StripeSubscriptionBackend, self).register(request, **kwargs)
-        new_user.groups.add(group)
+        try:
+            group = Group.objects.get(pk=plan)
+            new_user.groups.add(group)
+        except Group.DoesNotExist:
+            pass
         return new_user
