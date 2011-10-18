@@ -1,0 +1,8 @@
+.DS_Store
+*.pyc
+*.pyo
+*.tmp
+*.dev
+.coverage
+/example/local_settings.py
+/example/django_stripe/*
