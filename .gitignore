@@ -5,4 +5,5 @@
 *.dev
 .coverage
 /example/local_settings.py
+/example/test.db
 /example/django_stripe/*
