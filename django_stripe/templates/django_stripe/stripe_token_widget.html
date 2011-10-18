@@ -1,0 +1,69 @@
+<script type="text/javascript" src="https://js.stripe.com/v1/"></script>
+<script type="text/javascript">
+    (function($) {
+        if (typeof fieldValidationError != 'function')
+            fieldValidationError = function(input, message) {
+                var $errorlist = $('<ul class="errorlist"></ul>');
+
+                $errorlist.append('<li>' + message + '</li>');
+                $(input).parent().before($errorlist);
+            }
+
+        Stripe.setPublishableKey('pk_miiyJpxS5cdvPSeJJjV96GSIW24QJ');
+
+        $(function() {
+            var $form = $('#id_stripe-token').closest('form'),
+                $create_token_form = $('#stripe-create-token-form', $form),
+                $change_token_widget = $('#stripe-change-card', $form);
+
+            $form.submit(function(e) {
+                var self = this;
+
+                $('ul.errorlist', this).remove();
+
+                if ($create_token_form.is(':visible')) {
+                    e.preventDefault();
+
+                    Stripe.createToken({
+                        number: $('#id_stripe-number', this).val(),
+                        expMonth: $('#id_stripe-exp_month', this).val(),
+                        expYear: $('#id_stripe-exp_year', this).val(),
+                        // recommended
+                        cvc: $('#id_stripe-cvc', this).val() || null,
+                        address_line1: $('#id_stripe-address_line1', this).val() || null,
+                        address_zip: $('#id_stripe-address_zip', this).val() || null,
+                        // optional
+                        name: $('#id_stripe-name', this).val() || null,
+                        address_line2: $('#id_stripe-address_line2', this).val() || null,
+                        address_state: $('#id_stripe-address_state', this).val() || null,
+                        address_country: $('#id_stripe-address_country', this).val() || null,
+                    }, function(status, response) {
+                        if (status !== 200) {
+                            if (status === 402) {
+                                var field = $('#id_stripe-' + response.error.param, self),
+                                    message = response.error.message;
+
+                                fieldValidationError(field, message);
+                            }
+
+                            return;
+                        }
+
+                        $('#id_stripe-token').val(response.id);
+                        $('#id_stripe-last4').val(response.card.last4);
+
+                        console.log(self);
+
+                        self.submit();
+                    });
+                }
+            });
+
+            $('a', $change_token_widget).click(function() {
+                $change_token_widget.hide();
+                $create_token_form.show();
+                $('#id_stripe-number').focus();
+            });
+        });
+    })(jQuery);
+</script>

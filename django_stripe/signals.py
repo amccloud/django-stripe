@@ -1,29 +1,27 @@
-import django.dispatch
+from django.dispatch import Signal
 
 __all__ = ['recurring_payment_failed', 'invoice_ready', \
             'recurring_payment_succeeded', 'subscription_trial_ending', \
             'subscription_final_payment_attempt_failed', 'ping']
 
-recurring_payment_failed = django.dispatch.Signal(providing_args=[
-    'customer', 'livemode', 'event', 'attempt', 'invoice', 'payment',
+recurring_payment_failed = Signal(providing_args=[
+    'customer', 'attempt', 'invoice', 'payment', 'livemode', 
 ])
 
-invoice_ready = django.dispatch.Signal(providing_args=[
-    'customer', 'event', 'invoice',
+invoice_ready = Signal(providing_args=[
+    'customer', 'invoice',
 ])
 
-recurring_payment_succeeded = django.dispatch.Signal(providing_args=[
-    'customer', 'livemode', 'event', 'invoice', 'payment',
+recurring_payment_succeeded = Signal(providing_args=[
+    'customer', 'invoice', 'payment', 'livemode',
 ])
 
-subscription_trial_ending = django.dispatch.Signal(providing_args=[
-    'customer', 'event', 'subscription',
+subscription_trial_ending = Signal(providing_args=[
+    'customer', 'subscription',
 ])
 
-subscription_final_payment_attempt_failed = django.dispatch.Signal(providing_args=[
-    'customer', 'event', 'subscription',
+subscription_final_payment_attempt_failed = Signal(providing_args=[
+    'customer', 'subscription',
 ])
 
-ping = django.dispatch.Signal(providing_args=[
-    'event',
-])
+ping = Signal()

@@ -13,6 +13,9 @@ EVENT_SIGNAL_MAP = {
     'ping': ping,
 }
 
+class StripeWebhook(object):
+    pass
+
 @csrf_exempt
 def webhook_to_signal(request):
     if 'json' not in request.POST:
@@ -20,11 +23,12 @@ def webhook_to_signal(request):
 
     message = json.loads(request.POST.get('json'))
     event = message.get('event')
+    del message['event']
 
     if event not in EVENT_SIGNAL_MAP:
         raise Http404
 
     signal = EVENT_SIGNAL_MAP.get(event)
-    signal.send(sender=webhook_to_signal, **message)
+    signal.send(sender=StripeWebhook, **message)
 
     return HttpResponse()

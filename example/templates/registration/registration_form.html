@@ -1,7 +1,17 @@
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <h1>Sign up</h1>
 <form method="post" action=".">
     {% csrf_token %}
     {{ form.as_p }}
+    <p id="id_stripe-token-widget">
+        <div id="stripe-create-token-form" {% if form.last4.value %}style="display: none;"{% endif %}>
+            {{ create_token_form.as_p }}
+        </div>
+        <div id="stripe-change-card" {% if not form.last4.value %}style="display: none;"{% endif %}>
+            <p>Using card ending with {{ form.last4.value }} (<a href="#">change</a>)</p>
+        </div>
+        {% include "django_stripe/stripe_token_widget.html" %}
+    </p>
     <p>
         <button type="submit" class="secondary-button">Create account</button>
         or <a href="{% url auth_login %}">login</a>

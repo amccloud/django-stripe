@@ -1,6 +1,10 @@
-from django_stripe.settings import *
-from django_stripe.forms import PlanSubscriptionForm
+from django import forms
+
 from registration.forms import RegistrationForm
 
-class CreditCardRegistrationForm(RegistrationForm, PlanSubscriptionForm):
-    pass
+from django_stripe.forms import TokenForm
+
+from .settings import SUBSCRIPTION_PLAN_CHOICES
+
+class StripeSubscriptionForm(RegistrationForm, TokenForm):
+    plan = forms.CharField(widget=forms.Select(choices=SUBSCRIPTION_PLAN_CHOICES))
