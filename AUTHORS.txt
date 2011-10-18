@@ -1,0 +1,5 @@
+django-stripe was originally created by Andrew McCloud.
+
+The following is a list of much appreciated contributors:
+
+Andrew McCloud <andrew@amccloud.com>
