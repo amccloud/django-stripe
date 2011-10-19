@@ -2,6 +2,7 @@
 <h1>Sign up</h1>
 <form method="post" action=".">
     {% csrf_token %}
+    <noscript>This form requires Javascript to use.</noscript>
     {{ form.as_p }}
     <p id="id_stripe-token-widget">
         <div id="stripe-create-token-form" {% if form.last4.value %}style="display: none;"{% endif %}>
