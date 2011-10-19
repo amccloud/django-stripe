@@ -2,7 +2,9 @@ from django.http import Http404, HttpResponse
 from django.utils import simplejson as json
 from django.views.decorators.csrf import csrf_exempt
 
-from .signals import *
+from .signals import (recurring_payment_failed, invoice_ready, \
+    recurring_payment_succeeded, subscription_trial_ending, \
+    subscription_final_payment_attempt_failed, ping, StripeWebhook)
 
 EVENT_SIGNAL_MAP = {
     'recurring_payment_failed': recurring_payment_failed,
@@ -12,9 +14,6 @@ EVENT_SIGNAL_MAP = {
     'subscription_final_payment_attempt_failed': subscription_final_payment_attempt_failed,
     'ping': ping,
 }
-
-class StripeWebhook(object):
-    pass
 
 @csrf_exempt
 def webhook_to_signal(request):

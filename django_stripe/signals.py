@@ -1,8 +1,7 @@
 from django.dispatch import Signal
 
-__all__ = ['recurring_payment_failed', 'invoice_ready', \
-            'recurring_payment_succeeded', 'subscription_trial_ending', \
-            'subscription_final_payment_attempt_failed', 'ping']
+class StripeWebhook(object):
+    pass
 
 recurring_payment_failed = Signal(providing_args=[
     'customer', 'attempt', 'invoice', 'payment', 'livemode', 

@@ -4,9 +4,10 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
-from django_stripe.signals import *
 from django_stripe.contrib.registration.signals import user_registered
 from django_stripe.contrib.registration.backends import StripeSubscriptionBackend
+from django_stripe.signals import (recurring_payment_failed, \
+    subscription_final_payment_attempt_failed, StripeWebhook)
 
 from .models import UserProfile
 
@@ -29,7 +30,7 @@ def link_stripe_customer(sender, user, request, customer, last4, plan=None, **kw
 
     user_profile.save()
 
-@receiver(recurring_payment_failed)
+@receiver(recurring_payment_failed, sender=StripeWebhook)
 def update_payment_attempts(sender, customer, attempt, payment, **kwargs):
     try:
         user_profile = UserProfile.objects.get(customer_id=customer)
@@ -39,7 +40,7 @@ def update_payment_attempts(sender, customer, attempt, payment, **kwargs):
     except UserProfile.DoesNotExist:
         pass
 
-@receiver(subscription_final_payment_attempt_failed)
+@receiver(subscription_final_payment_attempt_failed, sender=StripeWebhook)
 def lock_account(sender, customer, subscription, **kwargs):
     try:
         user = User.objects.get(profile__customer_id=customer)
