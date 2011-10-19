@@ -19,7 +19,7 @@ def make_widget_anonymous(widget):
 
     return widget
 
-class CreateTokenForm(forms.Form):
+class CardForm(forms.Form):
     number = forms.CharField(label=_("Card number"))
     exp_month = forms.CharField(label=_("Expiration month"), widget=forms.Select(choices=MONTH_CHOICES))
     exp_year = forms.CharField(label=_("Expiration year"), widget=forms.Select(choices=YEAR_CHOICES))
@@ -35,7 +35,7 @@ class CreateTokenForm(forms.Form):
 
     def __init__(self, validate_cvc=True, validate_address=False, \
                     prefix=FORM_PREIX, *args, **kwargs):
-        super(CreateTokenForm, self).__init__(prefix=prefix, *args, **kwargs)
+        super(CardForm, self).__init__(prefix=prefix, *args, **kwargs)
 
         if validate_cvc:
             self.fields['cvc'] = self.get_cvc_field()
@@ -43,6 +43,11 @@ class CreateTokenForm(forms.Form):
         if validate_address:
             self.fields['address_line1'] = self.get_address_line1_field()
             self.fields['address_zip'] = self.get_address_zip_field()
+
+
+class CreateTokenForm(CardForm):
+    def __init__(self, *args, **kwargs):
+        super(CreateTokenForm, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
             make_widget_anonymous(self.fields[key].widget)
