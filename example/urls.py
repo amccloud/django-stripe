@@ -5,6 +5,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^account/', include('django_stripe.contrib.registration.urls')),
-    url(r'^account/', include('django_stripe.urls')),
+    url(r'^account/', include('django_stripe.urls', namespace='stripe')),
     url(r'^admin/', include(admin.site.urls)),
 )

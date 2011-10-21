@@ -18,6 +18,16 @@ class UserProfile(models.Model):
     def trialing(self):
         return datetime.now() >= self.trial_end
 
+    @property
+    def collaborator_count(self):
+        return 4
+
+    def get_price(self):
+        if self.plan == 'pro':
+            return 8.00
+
+        return 0.00
+
     def __unicode__(self):
         return unicode(self.user)
 
