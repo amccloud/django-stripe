@@ -42,7 +42,7 @@ def invoice_user(sender, customer, invoice, **kwargs):
         user_profile = UserProfile.objects.get(customer_id=customer)
         amount = int(user_profile.collaborator_count * user_profile.get_price())
 
-        if amount > 0:
+        if not user_profile.trialing and amount > 0:
             stripe.InvoiceItem.create( \
                 customer=customer,
                 amount=amount * 100,
