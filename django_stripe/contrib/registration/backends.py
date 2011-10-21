@@ -1,18 +1,14 @@
-import stripe
-
 from django.utils.functional import curry
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
-from django_stripe.settings import STRIPE_SECRET_KEY
+from django_stripe.shortcuts import stripe
 
 from registration.backends.simple import SimpleBackend
 
 from .forms import StripeSubscriptionForm
 from .signals import user_registered
 from .settings import SUBSCRIPTION_CUSTOMER_DESCRIPTION
-
-stripe.api_key = STRIPE_SECRET_KEY
 
 class StripeSubscriptionBackend(SimpleBackend):
     def get_form_class(self, request):

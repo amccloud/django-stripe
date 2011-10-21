@@ -1,10 +1,6 @@
-import stripe
-
 from django.core.management.base import BaseCommand
 
-from ...settings import STRIPE_SECRET_KEY
-
-stripe.api_key = STRIPE_SECRET_KEY
+from ...shortcuts import stripe
 
 class Command(BaseCommand):
     help = "Clear all test customers from your stripe account."
