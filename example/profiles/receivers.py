@@ -1,20 +1,16 @@
-import stripe
-
 from datetime import datetime
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
-from django_stripe.settings import STRIPE_SECRET_KEY
+from django_stripe.shortcuts import stripe
 from django_stripe.contrib.registration.backends import StripeSubscriptionBackend
 from django_stripe.contrib.registration.signals import user_registered
 from django_stripe.signals import (upcoming_invoice_updated, invoice_ready, \
     recurring_payment_failed, subscription_final_payment_attempt_failed, StripeWebhook)
 
 from .models import UserProfile
-
-stripe.api_key = STRIPE_SECRET_KEY
 
 @receiver(post_save, sender=User, \
     dispatch_uid='profiles.receivers.create_user_profile')
