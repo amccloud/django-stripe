@@ -3,12 +3,12 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
 from django_stripe.shortcuts import stripe
+from django_stripe.settings import STRIPE_CUSTOMER_DESCRIPTION
 
 from registration.backends.simple import SimpleBackend
 
 from .forms import StripeSubscriptionForm
 from .signals import user_registered
-from .settings import SUBSCRIPTION_CUSTOMER_DESCRIPTION
 
 class StripeSubscriptionBackend(SimpleBackend):
     def get_form_class(self, request):
@@ -17,14 +17,13 @@ class StripeSubscriptionBackend(SimpleBackend):
         })
 
     def get_customer_description(self, user):
-        return SUBSCRIPTION_CUSTOMER_DESCRIPTION(user)
+        return STRIPE_CUSTOMER_DESCRIPTION(user)
 
     def register(self, request, **kwargs):
         username = kwargs['username']
         password = kwargs['password1']
         email = kwargs['email']
         token = kwargs['token']
-        last4 = kwargs['last4']
         plan = kwargs['plan']
 
         User.objects.create_user(username, email, password)
@@ -42,7 +41,6 @@ class StripeSubscriptionBackend(SimpleBackend):
             'user': new_user,
             'request': request,
             'customer': customer,
-            'last4': last4,
             'plan': plan,
         })
 

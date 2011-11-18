@@ -20,10 +20,10 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(user_registered, sender=StripeSubscriptionBackend, \
     dispatch_uid='profiles.receivers.link_stripe_customer')
-def link_stripe_customer(sender, user, request, customer, last4, plan=None, **kwargs):
+def link_stripe_customer(sender, user, request, customer, plan=None, **kwargs):
     user_profile = user.get_profile()
     user_profile.customer_id = customer.id
-    user_profile.card_last4 = last4
+    user_profile.card_last4 = customer.active_card.last_4
     user_profile.plan = plan
 
     try:

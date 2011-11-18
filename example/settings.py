@@ -30,13 +30,12 @@ else:
 # Make this unique, and don't share it with anybody.
 STRIPE_WEBHOOK_SECRET = '3j9d-modm_7'
 
-# django_stripe.contrib.registration
-SUBSCRIPTION_PLAN_CHOICES = (
+STRIPE_PLAN_CHOICES = (
     ('free', 'Free'),
     ('pro', 'Pro'),
 )
 
-SUBSCRIPTION_CUSTOMER_DESCRIPTION = lambda u: u.email
+STRIPE_CUSTOMER_DESCRIPTION = lambda u: u.email
 
 # profiles
 AUTH_PROFILE_MODULE = 'profiles.UserProfile'
@@ -44,6 +43,7 @@ AUTH_PROFILE_MODULE = 'profiles.UserProfile'
 # --- other django settings ---
 
 import os
+from django.core.urlresolvers import reverse_lazy
 
 PROJECT_DIR = os.path.dirname(__file__)
 
@@ -181,6 +181,8 @@ LOGGING = {
         },
     }
 }
+
+LOGIN_REDIRECT_URL = reverse_lazy('profiles:account_billing')
 
 try:
     from local_settings import *

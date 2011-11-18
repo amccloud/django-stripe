@@ -3,11 +3,11 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
-from django_stripe.contrib.registration.settings import SUBSCRIPTION_PLAN_CHOICES
+from django_stripe.settings import STRIPE_PLAN_CHOICES
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, related_name='profile', unique=True)
-    plan = models.CharField(max_length=32, choices=SUBSCRIPTION_PLAN_CHOICES, blank=True, null=True)
+    plan = models.CharField(max_length=32, choices=STRIPE_PLAN_CHOICES, blank=True, null=True)
     customer_id = models.CharField(max_length=32, blank=True, null=True)
     card_last4 = models.CharField(max_length=4, blank=True, null=True)
     payment_attempts = models.PositiveIntegerField(default=0, blank=True, null=True)

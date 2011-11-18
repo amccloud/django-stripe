@@ -4,6 +4,9 @@ from django import forms
 from django.contrib.localflavor.us.forms import USZipCodeField
 from django.utils.translation import ugettext as _
 
+from .settings import STRIPE_PLAN_CHOICES, STRIPE_CUSTOMER_DESCRIPTION
+from .shortcuts import stripe
+
 FORM_PREIX = 'stripe'
 
 CURRENT_YEAR = datetime.date.today().year
@@ -45,21 +48,35 @@ class CardForm(forms.Form):
             self.fields['address_zip'] = self.get_address_zip_field()
 
 
-class CreateTokenForm(CardForm):
+class AnonymousCardForm(CardForm):
     def __init__(self, *args, **kwargs):
-        super(CreateTokenForm, self).__init__(*args, **kwargs)
+        super(AnonymousCardForm, self).__init__(*args, **kwargs)
 
         for key in self.fields.keys():
             make_widget_anonymous(self.fields[key].widget)
 
 
-class TokenForm(forms.Form):
+class CardTokenForm(AnonymousCardForm):
     last4 = forms.CharField(min_length=4, max_length=4, required=False, widget=forms.HiddenInput())
     token = forms.CharField(required=False, widget=forms.HiddenInput())
 
     def __init__(self, prefix=FORM_PREIX, *args, **kwargs):
-        super(TokenForm, self).__init__(prefix=prefix, *args, **kwargs)
+        super(CardTokenForm, self).__init__(prefix=prefix, *args, **kwargs)
 
     def clean(self):
         if not self.cleaned_data['last4'] or not self.cleaned_data['token']:
             raise forms.ValidationError(_("Could not validate credit card."))
+
+
+class CustomerForm(CardTokenForm):
+    plan = forms.CharField(widget=forms.Select(choices=STRIPE_PLAN_CHOICES))
+
+    def get_customer_description(self, user):
+        return STRIPE_CUSTOMER_DESCRIPTION(user)
+
+    def save(self, user):
+        return stripe.Customer.create(
+            description=self.get_customer_description(user),
+            card=self.cleaned_data['token'],
+            plan=self.cleaned_data['plan']
+        )
